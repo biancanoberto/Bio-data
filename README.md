@@ -58,13 +58,3 @@ http://localhost:5173
 
 - Configure o `.env` do backend antes de rodar migrations, seed ou API.
 - O frontend consome a API pela variavel `VITE_API_URL`.
-- Nunca envie arquivos `.env` para o repositorio.
-- Nunca coloque `SUPABASE_SERVICE_ROLE_KEY` no frontend.
-
-## Deploy
-
-O fluxo recomendado para deploy esta documentado no README do frontend:
-
-- Frontend na Vercel
-- Backend em plataforma Node persistente, como Render, Railway ou Fly.io
-- Banco e Storage no Supabase
