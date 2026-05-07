@@ -1,0 +1,83 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Category {
+  id      String   @id @default(uuid()) @db.Uuid
+  name    String   @unique @db.VarChar(80)
+
+  animals Animal[]
+
+  @@map("categories")
+}
+
+model ConservationStatus {
+  id      String   @id @default(uuid()) @db.Uuid
+  name    String   @unique @db.VarChar(80)
+  level   Int
+  color   String?  @db.VarChar(30)
+
+  animals Animal[]
+
+  @@map("conservation_statuses")
+}
+
+model Biome {
+  id      String        @id @default(uuid()) @db.Uuid
+  name    String        @unique @db.VarChar(80)
+
+  animals AnimalBiome[]
+
+  @@map("biomes")
+}
+
+model Animal {
+  id                     String   @id @default(uuid()) @db.Uuid
+  commonName             String   @map("common_name") @db.VarChar(120)
+  scientificName         String   @map("scientific_name") @db.VarChar(160)
+
+  categoryId             String   @map("category_id") @db.Uuid
+  conservationStatusId   String   @map("conservation_status_id") @db.Uuid
+
+  createdAt              DateTime @default(now()) @map("created_at")
+  updatedAt              DateTime @updatedAt @map("updated_at")
+
+  category               Category @relation(fields: [categoryId], references: [id])
+  conservationStatus     ConservationStatus @relation(fields: [conservationStatusId], references: [id])
+
+  biomes                 AnimalBiome[]
+  images                 AnimalImage[]
+
+  @@map("animals")
+}
+
+model AnimalBiome {
+  animalId String @map("animal_id") @db.Uuid
+  biomeId  String @map("biome_id") @db.Uuid
+
+  animal   Animal @relation(fields: [animalId], references: [id], onDelete: Cascade)
+  biome    Biome  @relation(fields: [biomeId], references: [id], onDelete: Cascade)
+
+  @@id([animalId, biomeId])
+  @@map("animal_biomes")
+}
+
+model AnimalImage {
+  id            String   @id @default(uuid()) @db.Uuid
+  animalId      String   @map("animal_id") @db.Uuid
+
+  storageBucket String   @map("storage_bucket") @db.VarChar(80)
+  storagePath   String   @map("storage_path") @db.Text
+
+  altText       String?  @map("alt_text") @db.VarChar(255)
+  isCover       Boolean  @default(false) @map("is_cover")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  animal        Animal   @relation(fields: [animalId], references: [id], onDelete: Cascade)
+
+  @@map("animal_images")
+}
