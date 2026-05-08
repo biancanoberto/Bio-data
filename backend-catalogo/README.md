@@ -143,3 +143,35 @@ docker compose down -v
 - Nao commite `.env`.
 - Rotacione chaves caso tenham sido compartilhadas acidentalmente.
 - A `SUPABASE_SERVICE_ROLE_KEY` deve existir apenas no backend.
+
+## Deploy no Render
+
+Configuracao recomendada:
+
+```text
+Root Directory: backend-catalogo
+Build Command: npm install && npx prisma generate && npm run build
+Start Command: npm run start:prod
+```
+
+Variaveis de ambiente no Render:
+
+```env
+DATABASE_URL="postgresql://postgres.project-ref:password@aws-1-region.pooler.supabase.com:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://postgres:password@db.project-ref.supabase.co:5432/postgres"
+SUPABASE_URL="https://project-ref.supabase.co"
+SUPABASE_SERVICE_ROLE_KEY="your-supabase-service-role-key"
+NODE_ENV="production"
+```
+
+O script de producao executa:
+
+```powershell
+node dist/main.js
+```
+
+Como o projeto usa Prisma 7, as URLs de conexao ficam em `prisma.config.ts`.
+O `schema.prisma` mantem apenas `provider = "postgresql"`, e o Prisma CLI usa
+`DIRECT_URL` quando ela existir, com fallback para `DATABASE_URL`.
+
+O seed nao deve rodar automaticamente no deploy se o banco do Supabase ja estiver populado.

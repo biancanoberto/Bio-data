@@ -33,6 +33,6 @@ async function bootstrap() {
     customSiteTitle: 'Catálogo de Animais Docs',
   });
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT || 3000);
 }
 bootstrap();
