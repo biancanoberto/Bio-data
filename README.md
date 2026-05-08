@@ -1,6 +1,7 @@
 # Desafio Tecnico - Catalogo de Especies
 
 Sistema full stack para catalogo de especies, organizado em duas aplicacoes independentes: frontend e backend.
+Para acessar a versão atual: https://bio-data-ten-blue.vercel.app/
 
 ## Estrutura
 
